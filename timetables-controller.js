@@ -61,8 +61,9 @@ function timetablesController() {
         }
 
         // Render methods
-        const renderMultipleActivities = (cell) => {
-            const { activities } = cell;
+        const renderMultipleActivities = (activities) => {          
+            // checking if no activties were set yet
+            if ( !activities ) return '';
 
             const multiActivityHTML = activities.map(activity => {
                 switch (activity.type) {
@@ -103,7 +104,7 @@ function timetablesController() {
                             case 'strong-zumba':
                                 return `${timeCell}<div class="grid__item grid__item--preset" style="background-image: url(https://files.outfit.io/media_library_items/200878/strong-zumba.svg);"></div>`;
                             case 'multiple-activity':
-                                return `${timeCell}<div class="grid__item grid__item--multiple">${renderMultipleActivities(cell)}</div>`;
+                                return `${timeCell}<div class="grid__item grid__item--multiple">${renderMultipleActivities(cell.activities)}</div>`;
                             default:
                                 return `${timeCell}<div class="grid__item"></div>`;
                         }
