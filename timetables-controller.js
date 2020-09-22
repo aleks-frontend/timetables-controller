@@ -5,8 +5,8 @@ function timetablesController() {
         const targetContainer = document.querySelectorAll('[data-timetable-js-hook="target-container"]')[index];
         const heading = timetable.dataset.timetableHeading;
         const title = timetable.dataset.timetableTitle;
-        const titleColour = timetable.dataset.timetableTitleColour;
         const showSunday = timetable.dataset.timetableShowSunday === '' ? 'show' : timetable.dataset.timetableShowSunday;
+        let showSundayPopup = false;
         const rows = timetable.querySelectorAll('[data-timetable-js-hook="row"]');
         const rowsData = [];
         const emptyColumns = {};
@@ -46,7 +46,7 @@ function timetablesController() {
                 }
 
                 if (cellData.day === '6' && showSunday === 'hide') {
-                    alert('Set Sunday to \'show in order to add activity for that day.');
+                    showSundayPopup = true;
                 } else if (rowData.days[cellData.day] !== emptyCellClass) {
                     rowData.days.splice(cellData.day, 1, 'error-cell')
                 } else {
@@ -78,7 +78,7 @@ function timetablesController() {
                     types.push(text);
                 }
 
-                switch (type) {
+                switch (activity.type) {
                     case 'fx':
                         return '<div class="grid__inner" style="background-image: url(https://files.outfit.io/media_library_items/200881/fx30.svg);"></div>';
                     case 'barre':
@@ -110,7 +110,7 @@ function timetablesController() {
                     case 'lesmills-grit':
                         return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg);"></div>';
                     case 'custom-activity':
-                        return `<div class="grid__inner" style="background: ${color}">${text}</div>`;
+                        return `<div class="grid__inner" style="background: ${activity.color}">${activity.text}</div>`;
                     default:
                         return '<div class="grid__inner"></div>';
                 }
@@ -179,6 +179,28 @@ function timetablesController() {
                                 return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200872/les-mills-bodystep-white.svg);"></div>`;
                             case 'lesmills-grit':
                                 return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg);"></div>`;
+                            case 'aqua-aerobics':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#93d2f1;">AQUA AEROBICS</div>`;
+                            case 'aqua-for-all':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#d1e8f8;">AQUA FOR ALL</div>`;
+                            case 'silver-sneakers':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#e6e7e9;">SILVER SNEAKERS</div>`;
+                            case 'senior-movement-to-music':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#ffda99;">SENIOR MOVEMENT TO MUSIC</div>`;
+                            case 'yoga':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#d8e7a6;">YOGA</div>`;
+                            case 'fit-and-fab':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#e6e7e9;">FIT AND FABULOUS</div>`;
+                            case 'cycle':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#cedae6;">CYCLE</div>`;
+                            case 'sprint':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#ffcdb4;">SPRINT</div>`;
+                            case 'boxing':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#fea49b;">BOXING</div>`;
+                            case 'sh-bam':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#eaf2b7;">SH-BAM</div>`;
+                            case 'aqua-deep':
+                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#eaf2b7;">AQUA DEEP</div>`;
                             case 'multiple-activity':
                                 return `${timeCell}<div class="grid__item grid__item--multiple grid__item--cell">${renderMultipleActivities(cell.activities)}</div>`;
                             default:
@@ -202,11 +224,39 @@ function timetablesController() {
             return (showSunday === 'show' ? sevenDaysRow : sixDaysRow);
         };
 
+        const renderHeading = () => {
+            if (heading === '') {
+                return '';
+            } else {
+                return `<div class="grid__item grid__item--heading">
+<div class="textFit--heading">${heading}</div>
+  </div>`;
+            }
+        };
+
+        const renderSundayPopup = () => {
+            if (showSundayPopup === true) {
+                return `
+<div style="position: absolute; top: 50%; left: 50%; padding: 10px; background: #fff; border: 2px solid red; font-weight: bold; text-align: center; transform: translate(-50%, -50%);">Set 'Show Sunday' to 'Show' or change the activity day.</div>
+`;
+            } else {
+                return '';
+            }
+        };
+
         targetContainer.innerHTML = `
-            <div class="grid" style="grid-template-columns: repeat(${showSunday === 'show' ? '8' : '7'}, 1fr);">
-            <div class="grid__item grid__item--title" data-max-height="css" style="background-color:${titleColour}; ">${title}</div>
-                ${renderDaysLabels()}
-                ${renderRows()}
-            </div>`;
+<div class="grid" style="grid-template-columns: repeat(${showSunday === 'show' ? '8' : '7'}, 1fr);">
+${renderSundayPopup()}
+${renderHeading()}
+<div class="grid__item grid__item--title" data-max-line="css">${title}</div>
+${renderDaysLabels()}
+${renderRows()}
+  </div>`;
+
+        // TextFit needs to be initialized once again when 
+        // the dynamic table is generated and inserted into the DOM
+        TextFit.fit({
+            selector: '.textFit'
+        });
     }
 }
