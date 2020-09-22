@@ -5,8 +5,7 @@ function timetablesController() {
         const targetContainer = document.querySelectorAll('[data-timetable-js-hook="target-container"]')[index];
         const heading = timetable.dataset.timetableHeading;
         const title = timetable.dataset.timetableTitle;
-        const showSunday = timetable.dataset.timetableShowSunday === '' ? 'show' : timetable.dataset.timetableShowSunday;
-        let showSundayPopup = false;
+        const handleEmptyColumns = timetable.dataset.timetableHandleEmptyColumns;
         const rows = timetable.querySelectorAll('[data-timetable-js-hook="row"]');
         const rowsData = [];
         const emptyColumns = {};
@@ -18,7 +17,7 @@ function timetablesController() {
             const cells = row.querySelectorAll('[data-timetable-js-hook="cell"]');
             const rowData = {
                 time: time,
-                days: new Array(showSunday === 'show' ? 7 : 6).fill(emptyCellClass)
+                days: new Array(7).fill(emptyCellClass)
             };
 
             for (const cell of cells) {
@@ -45,9 +44,7 @@ function timetablesController() {
                     }
                 }
 
-                if (cellData.day === '6' && showSunday === 'hide') {
-                    showSundayPopup = true;
-                } else if (rowData.days[cellData.day] !== emptyCellClass) {
+                if (rowData.days[cellData.day] !== emptyCellClass) {
                     rowData.days.splice(cellData.day, 1, 'error-cell')
                 } else {
                     if (type === 'custom-activity') {
@@ -133,11 +130,17 @@ function timetablesController() {
             }
         }
 
+        const renderGridItemCell = (modifiers, bgImageUrl) => {
+            const modifierClasses = modifiers.split(' ').map(modifier => `grid__item--${modifier}`).join(' ');
+            return `<div class="grid__item grid__item--cell ${modifierClasses}" style="background-image: url(${bgImageUrl});"></div>`;
+        };
+
         const renderRows = () => {
             return rowsData.map(rowData => {
                 return rowData.days.map((cell, index) => {
                     // Logic for showing the time cell at the begining of each row
                     const timeCell = index === 0 ? `<div class="grid__item grid__item--cell grid__item--time">${rowData.time}</div>` : '';
+                    const gridItemCellClass = 'grid__item grid__item--cell';
 
                     if (cell === emptyCellClass) {
                         const isInEmptyColumn = emptyColumns[index] === rowsData.length ? ' grid__item--emptyColumn' : '';
@@ -148,37 +151,37 @@ function timetablesController() {
                     } else {
                         switch (cell.type) {
                             case 'custom-activity':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background: ${cell.color}">${cell.text}</div>`;
+                                return `${timeCell}<div class="${gridItemCellClass}" style="background: ${cell.color}">${cell.text}</div>`;
                             case 'fx':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell" style="background-image: url(https://files.outfit.io/media_library_items/200881/fx30.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200881/fx30.svg')}`;
                             case 'barre':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell" style="background-image: url(https://files.outfit.io/media_library_items/200879/les-mills-barre-black.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200879/les-mills-barre-black.svg')}`;
                             case 'strong-zumba':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell" style="background-image: url(https://files.outfit.io/media_library_items/200878/strong-zumba.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200878/strong-zumba.svg')}`;
                             case 'zumba':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell" style="background-image: url(https://files.outfit.io/media_library_items/200856/zumba-fitness.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200856/zumba-fitness.svg')}`;
                             case 'game-on':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell" style="background-image: url(https://files.outfit.io/media_library_items/200867/game-on.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200867/game-on.svg')}`;
                             case 'metafit':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--metafit" style="background-image: url(https://files.outfit.io/media_library_items/205052/meta-fit-bodyweight-training.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset metafit', 'https://files.outfit.io/media_library_items/205052/meta-fit-bodyweight-training.svg')}`;
                             case 'lesmills-bodypump':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200873/les-mills-bodypump-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200873/les-mills-bodypump-white.svg')}`;
                             case 'lesmills-bodybalance':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200874/les-mills-bodybalance-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200874/les-mills-bodybalance-white.svg')}`;
                             case 'lesmills-bodycombat':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200875/les-mills-bodycombat-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200875/les-mills-bodycombat-white.svg')}`;
                             case 'lesmills-rpm':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200870/les-mills-rpm.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200870/les-mills-rpm.svg')}`;
                             case 'lesmills-cxwork':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200869/les-mills-cxworx-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200869/les-mills-cxworx-white.svg')}`;
                             case 'lesmills-bodyattack':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200876/les-mills-bodyattack-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200876/les-mills-bodyattack-white.svg')}`;
                             case 'lesmills-bodyjam':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200864/les-mills-bodyjam-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200864/les-mills-bodyjam-white.svg')}`;
                             case 'lesmills-bodystep':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200872/les-mills-bodystep-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200872/les-mills-bodystep-white.svg')}`;
                             case 'lesmills-grit':
-                                return `${timeCell}<div class="grid__item grid__item--preset grid__item--cell grid__item--lessmills" style="background-image: url(https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg);"></div>`;
+                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg')}`;
                             case 'aqua-aerobics':
                                 return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#93d2f1;">AQUA AEROBICS</div>`;
                             case 'aqua-for-all':
@@ -212,16 +215,9 @@ function timetablesController() {
         };
 
         const renderDaysLabels = () => {
-            const sixDaysRow = `
-                <div class="grid__item grid__item--day grid__item--time">TIME</div>
-                <div class="grid__item grid__item--day">MON</div>
-                <div class="grid__item grid__item--day">TUE</div>
-                <div class="grid__item grid__item--day">WED</div>
-                <div class="grid__item grid__item--day">THU</div>
-                <div class="grid__item grid__item--day">FRI</div>
-                <div class="grid__item grid__item--day">SAT</div>`;
-            const sevenDaysRow = sixDaysRow + '<div class="grid__item grid__item--day">SUN</div>';
-            return (showSunday === 'show' ? sevenDaysRow : sixDaysRow);
+            const daysLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+
+            return daysLabels.map((label, index) => `<div class="grid__item grid__item--day ${emptyColumns[index] === rowsData.length ? ' grid__item--emptyColumn' : ''}">${label}</div>`).join('');
         };
 
         const renderHeading = () => {
@@ -234,21 +230,17 @@ function timetablesController() {
             }
         };
 
-        const renderSundayPopup = () => {
-            if (showSundayPopup === true) {
-                return `
-<div style="position: absolute; top: 50%; left: 50%; padding: 10px; background: #fff; border: 2px solid red; font-weight: bold; text-align: center; transform: translate(-50%, -50%);">Set 'Show Sunday' to 'Show' or change the activity day.</div>
-`;
-            } else {
-                return '';
-            }
-        };
+        // Getting the total count of empty columns in order to set the grid-template-columns value later
+        const emptyColumnsCount = Object.keys(emptyColumns).reduce((total, key) => emptyColumns[key] === rowsData.length ? total + 1 : total, 0);
 
         targetContainer.innerHTML = `
-<div class="grid" style="grid-template-columns: repeat(${showSunday === 'show' ? '8' : '7'}, 1fr);">
-${renderSundayPopup()}
+<div 
+class="grid ${handleEmptyColumns === 'hide' ? 'hide-empty-columns' : 'show-grey-empty-columns'}" 
+style="grid-template-columns: repeat(${handleEmptyColumns === 'hide' ? (8 - emptyColumnsCount) : 8}, 1fr);"
+>
 ${renderHeading()}
 <div class="grid__item grid__item--title" data-max-line="css">${title}</div>
+<div class="grid__item grid__item--day grid__item--time">TIME</div>
 ${renderDaysLabels()}
 ${renderRows()}
   </div>`;
