@@ -231,7 +231,7 @@ function timetablesController() {
         };
 
         // Getting the total count of empty columns in order to set the grid-template-columns value later
-        const emptyColumnsCount = Object.keys(emptyColumns).reduce((total, key) => emptyColumns[key] === rowsData.length ? total + 1 : total, 0);
+        const emptyColumnsCount = Object.keys(emptyColumns).reduce((total, key) => emptyColumns[key] === rowsData.length ? ++total : total, 0);
 
         targetContainer.innerHTML = `
 <div 
