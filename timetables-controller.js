@@ -60,6 +60,11 @@ function timetablesController() {
         }
 
         // Render methods
+        const renderGridInner = (bgImageUrl, modifiers = '') => {
+            const modifierClasses = modifiers.split(' ').map(modifier => `grid__item--${modifier}`).join(' ');
+            return `<div class="grid__inner ${modifierClasses}" style="background-image: url(${bgImageUrl});"></div>`;
+        };
+
         const renderMultipleActivities = (activities) => {
             // checking if no activties were set yet
             if (!activities) return '';
@@ -77,35 +82,35 @@ function timetablesController() {
 
                 switch (activity.type) {
                     case 'fx':
-                        return '<div class="grid__inner" style="background-image: url(https://files.outfit.io/media_library_items/200881/fx30.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200881/fx30.svg');
                     case 'barre':
-                        return '<div class="grid__inner" style="background-image: url(https://files.outfit.io/media_library_items/200879/les-mills-barre-black.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200879/les-mills-barre-black.svg');
                     case 'strong-zumba':
-                        return '<div class="grid__inner" style="background-image: url(https://files.outfit.io/media_library_items/200878/strong-zumba.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200878/strong-zumba.svg');
                     case 'zumba':
-                        return '<div class="grid__inner" style="background-image: url(https://files.outfit.io/media_library_items/200856/zumba-fitness.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200856/zumba-fitness.svg');
                     case 'game-on':
-                        return '<div class="grid__inner" style="background-image: url(https://files.outfit.io/media_library_items/200867/game-on.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200867/game-on.svg');
                     case 'metafit':
-                        return '<div class="grid__inner grid__inner--metafit" style="background-image: url(https://files.outfit.io/media_library_items/205052/meta-fit-bodyweight-training.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/205052/meta-fit-bodyweight-training.svg', 'metafit');
                     case 'lesmills-bodypump':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200873/les-mills-bodypump-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200873/les-mills-bodypump-white.svg', 'lesmills');
                     case 'lesmills-bodybalance':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200874/les-mills-bodybalance-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200874/les-mills-bodybalance-white.svg', 'lesmills');
                     case 'lesmills-bodycombat':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200875/les-mills-bodycombat-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200875/les-mills-bodycombat-white.svg', 'lesmills');
                     case 'lesmills-rpm':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200870/les-mills-rpm.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200870/les-mills-rpm.svg', 'lesmills');
                     case 'lesmills-cxwork':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200869/les-mills-cxworx-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200869/les-mills-cxworx-white.svg', 'lesmills');
                     case 'lesmills-bodyattack':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200876/les-mills-bodyattack-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200876/les-mills-bodyattack-white.svg', 'lesmills');
                     case 'lesmills-bodyjam':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200864/les-mills-bodyjam-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200864/les-mills-bodyjam-white.svg', 'lesmills');
                     case 'lesmills-bodystep':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200872/les-mills-bodystep-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200872/les-mills-bodystep-white.svg', 'lesmills');
                     case 'lesmills-grit':
-                        return '<div class="grid__inner grid__inner--lesmills" style="background-image: url(https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg);"></div>';
+                        return renderGridInner('https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg', 'lesmills');
                     case 'custom-activity':
                         return `<div class="grid__inner" style="background: ${activity.color}">${activity.text}</div>`;
                     default:
@@ -130,9 +135,13 @@ function timetablesController() {
             }
         }
 
-        const renderGridItemCell = (modifiers, bgImageUrl) => {
+        const renderGridItemWithLogo = (bgImageUrl, modifiers = '') => {
             const modifierClasses = modifiers.split(' ').map(modifier => `grid__item--${modifier}`).join(' ');
-            return `<div class="grid__item grid__item--cell ${modifierClasses}" style="background-image: url(${bgImageUrl});"></div>`;
+            return `<div class="grid__item grid__item--cell ${modifierClasses === 'grid__item--' ? '' : modifierClasses }" style="background-image: url(${bgImageUrl});"></div>`;
+        };
+
+        const renderGridItemWithText = (colorHex, text) => {
+            return `<div class="grid__item grid__item--cell" style="background-color:${colorHex};">${text}</div>`;
         };
 
         const renderRows = () => {
@@ -153,57 +162,57 @@ function timetablesController() {
                             case 'custom-activity':
                                 return `${timeCell}<div class="${gridItemCellClass}" style="background: ${cell.color}">${cell.text}</div>`;
                             case 'fx':
-                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200881/fx30.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200881/fx30.svg', 'preset')}`;
                             case 'barre':
-                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200879/les-mills-barre-black.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200879/les-mills-barre-black.svg', 'preset')}`;
                             case 'strong-zumba':
-                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200878/strong-zumba.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200878/strong-zumba.svg', 'preset')}`;
                             case 'zumba':
-                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200856/zumba-fitness.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200856/zumba-fitness.svg', 'preset')}`;
                             case 'game-on':
-                                return `${timeCell}${renderGridItemCell('preset', 'https://files.outfit.io/media_library_items/200867/game-on.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200867/game-on.svg', 'preset')}`;
                             case 'metafit':
-                                return `${timeCell}${renderGridItemCell('preset metafit', 'https://files.outfit.io/media_library_items/205052/meta-fit-bodyweight-training.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/205052/meta-fit-bodyweight-training.svg', 'preset metafit')}`;
                             case 'lesmills-bodypump':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200873/les-mills-bodypump-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200873/les-mills-bodypump-white.svg', 'preset lesmills')}`;
                             case 'lesmills-bodybalance':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200874/les-mills-bodybalance-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200874/les-mills-bodybalance-white.svg', 'preset lesmills')}`;
                             case 'lesmills-bodycombat':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200875/les-mills-bodycombat-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200875/les-mills-bodycombat-white.svg', 'preset lesmills')}`;
                             case 'lesmills-rpm':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200870/les-mills-rpm.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200870/les-mills-rpm.svg', 'preset lesmills')}`;
                             case 'lesmills-cxwork':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200869/les-mills-cxworx-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200869/les-mills-cxworx-white.svg', 'preset lesmills')}`;
                             case 'lesmills-bodyattack':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200876/les-mills-bodyattack-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200876/les-mills-bodyattack-white.svg', 'preset lesmills')}`;
                             case 'lesmills-bodyjam':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200864/les-mills-bodyjam-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200864/les-mills-bodyjam-white.svg', 'preset lesmills')}`;
                             case 'lesmills-bodystep':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200872/les-mills-bodystep-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200872/les-mills-bodystep-white.svg', 'preset lesmills')}`;
                             case 'lesmills-grit':
-                                return `${timeCell}${renderGridItemCell('preset lesmills', 'https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg')}`;
+                                return `${timeCell}${renderGridItemWithLogo('https://files.outfit.io/media_library_items/200855/les-mills-grit-white.svg', 'preset lesmills')}`;
                             case 'aqua-aerobics':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#93d2f1;">AQUA AEROBICS</div>`;
+                                return `${timeCell}${renderGridItemWithText('#93d2f1', 'AQUA AEROBICS')}`;
                             case 'aqua-for-all':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#d1e8f8;">AQUA FOR ALL</div>`;
+                                return `${timeCell}${renderGridItemWithText('#d1e8f8', 'AQUA FOR ALL')}`;
                             case 'silver-sneakers':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#e6e7e9;">SILVER SNEAKERS</div>`;
+                                return `${timeCell}${renderGridItemWithText('#e6e7e9', 'SILVER SNEAKERS')}`;
                             case 'senior-movement-to-music':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#ffda99;">SENIOR MOVEMENT TO MUSIC</div>`;
+                                return `${timeCell}${renderGridItemWithText('#ffda99', 'SENIOR MOVEMENT TO MUSIC')}`;
                             case 'yoga':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#d8e7a6;">YOGA</div>`;
+                                return `${timeCell}${renderGridItemWithText('#d8e7a6', 'YOGA')}`;
                             case 'fit-and-fab':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#e6e7e9;">FIT AND FABULOUS</div>`;
+                                return `${timeCell}${renderGridItemWithText('#e6e7e9', 'FIT AND FABULOUS')}`;
                             case 'cycle':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#cedae6;">CYCLE</div>`;
+                                return `${timeCell}${renderGridItemWithText('#cedae6', 'CYCLE')}`;
                             case 'sprint':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#ffcdb4;">SPRINT</div>`;
+                                return `${timeCell}${renderGridItemWithText('#ffcdb4', 'SPRINT')}`;
                             case 'boxing':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#fea49b;">BOXING</div>`;
+                                return `${timeCell}${renderGridItemWithText('#fea49b', 'BOXING')}`;
                             case 'sh-bam':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#eaf2b7;">SH-BAM</div>`;
+                                return `${timeCell}${renderGridItemWithText('#eaf2b7', 'SH-BAM')}`;
                             case 'aqua-deep':
-                                return `${timeCell}<div class="grid__item grid__item--cell" style="background-color:#eaf2b7;">AQUA DEEP</div>`;
+                                return `${timeCell}${renderGridItemWithText('#eaf2b7', 'AQUA DEEP')}`;
                             case 'multiple-activity':
                                 return `${timeCell}<div class="grid__item grid__item--multiple grid__item--cell">${renderMultipleActivities(cell.activities)}</div>`;
                             default:
